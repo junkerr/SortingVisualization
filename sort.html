@@ -1,0 +1,180 @@
+<html>
+
+<head>
+<title>sort</title>
+<script>
+
+	let sortArray = new Array();
+
+	function init() {
+
+		for(let i=0; i < 100; i++) {
+			let element_td = document.createElement("td");
+			element_td.id = 'bubbleSort_' + i;
+			element_td.width = 2;
+			
+			let element_div = document.createElement("div");
+			element_div.id = i;
+			element_div.style.height = 1 + (i*1);
+			element_div.style.widht = 1;
+			element_div.style.backgroundColor = "gray";
+			element_td.appendChild(element_div);
+
+			let tr = document.getElementById("bubbleSort");
+			tr.appendChild(element_td);
+
+			sortArray.push(i);
+		}
+	}
+
+
+	var count = 0;
+
+	var isRunning = false;
+
+	//bubble정렬
+	async function bubbleSorting() {
+	
+		isRunning = true;
+		for(let i=0; i < sortArray.length; i++) {
+		
+			let tempNum = 0;
+			for(let j=0; j < sortArray.length; j++) {
+
+				document.getElementsByClassName('counter')[0].innerText = "step : " + ++count;
+				if(parseInt(sortArray[i]) < parseInt(sortArray[j])) { 
+					swap(i, j);
+					await delay(1);
+				}
+			} 
+		}
+		isRunning = false;
+		//for(let i=0; i < sortArray.length; i++) {
+		//	console.log(sortArray[i]);
+		//}
+
+	}
+
+	function delay(n){
+		return new Promise(function(resolve){
+			setTimeout(resolve,n);
+		});
+	}
+
+
+	function shuffle() {
+
+		if(isRunning) {
+			alert('wait!!');
+			return;
+		}
+
+		count = 0;
+		document.getElementsByClassName('counter')[0].innerText = "step : " + count;
+
+        let tempNum;
+        let randNum;
+       
+        // 섞기
+        for(let i=0; i< sortArray.length; i++)
+        {
+            randNum = Math.floor(Math.random() * sortArray.length);
+			swap(i, randNum);
+        }
+	}
+
+	function swap(num1, num2) {
+
+		let arrayId1 = document.getElementById("bubbleSort_" + num1);
+		let arrayId2 = document.getElementById("bubbleSort_" + num2);
+		
+		let div1 = getDiv(arrayId1.children);
+		let div2 = getDiv(arrayId2.children);
+		
+		//console.log("num1 : " + num1 + ",  div1.id : " + div1.id + ", num2 : " + num2 + ",  div2.id + " + div2.id);
+
+		removeAllChildNodes(arrayId1);
+		removeAllChildNodes(arrayId2);
+		//try{
+		//	arrayId1.removeChild(div1);
+		//} catch(e){}
+		//try {
+		//	arrayId2.removeChild(div2);
+		//} catch(e){}
+
+		// html 변경
+		arrayId1.appendChild(div2);
+		arrayId2.appendChild(div1);
+
+		// array 변경
+		sortArray[num1] = div2.id;
+		sortArray[num2] = div1.id;
+
+	}
+
+	function removeAllChildNodes(parent) {
+		while (parent.firstChild) {
+			parent.removeChild(parent.firstChild);
+		}
+	}
+
+	function getDiv(children) {
+
+		for(let i=0; i < children.length; i++) {
+		
+			//try {
+				//if(typeof children[i] == 'object') {
+					return children[0];
+				//}
+			//} catch(e) {}
+		}
+	}
+
+
+	window.onload = () => {
+		init();
+		shuffle();
+	}
+
+</script>
+
+<style>
+	
+	.bar {
+		height: 99px;
+		widht:1px;
+		background-color: black;
+		align: horizontal;
+	}
+
+	table {
+		background-color: powderblue;
+		width: 500x;
+		height: 100px;		
+	}
+
+	td {
+		vertical-align: text-bottom;
+	}
+
+	.counter {
+		
+	}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Bubble Sort</h1> 
+<input type="button" value="sorting" onclick="bubbleSorting()"/>
+<input type="button" value="shuffle" onclick="shuffle()"/>
+<label class="counter">step : 0</label>
+<table>
+	<tr id='bubbleSort'><tr>
+</table>
+
+</body>
+
+</html>
